@@ -1,0 +1,28 @@
+# Python build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.db
+*.sqlite3
+*.egg-info/
+
+# Virtual environments
+venv/
+.env
+
+# Editor / OS metadata
+.DS_Store
+.idea/
+.vscode/
+
+# Node.js projects
+node_modules/
+dist/
+build/
+.npm/
+.cache/
+.env.local
+.env.development
+.env.production

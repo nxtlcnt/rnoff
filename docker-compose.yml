@@ -42,6 +42,8 @@ services:
       - chatbot_service
       - gee_service
       - frontend
+    env_file:
+      - .env
     networks:
       - app-network
 

@@ -1,0 +1,2 @@
+LangChain is a framework for building applications with language models.
+It offers integrations for vector stores, retrievers, agents, and more.
