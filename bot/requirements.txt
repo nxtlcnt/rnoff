@@ -1,18 +1,7 @@
-# FastAPI app stack
 fastapi
 uvicorn
 pydantic
 httpx
 python-dotenv
-
-# LangChain core
-langchain
-langchain-community
-langchain-groq
-langchain-huggingface  
-
-# Embedding & vectorstore
-faiss-cpu
-sentence-transformers
-transformers
-tqdm
+scikit-learn
+groq

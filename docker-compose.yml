@@ -12,6 +12,8 @@ services:
     container_name: chatbot-service
     expose:
       - "8001"
+    env_file:
+      - .env
     networks:
       - app-network
 
@@ -20,6 +22,8 @@ services:
     container_name: gee-service
     expose:
       - "8002"
+    env_file:
+      - .env
     networks:
       - app-network
 
