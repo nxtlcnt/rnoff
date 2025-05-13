@@ -69,6 +69,12 @@ jobs:
       - name: Run npm build in frontend folder on Azure VM
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_HOST }} << 'EOF'
+          sudo apt update -y
+          sudo apt install -y curl
+          curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+          sudo apt install -y nodejs
+          node -v
+          npm -v
           cd /home/${{ secrets.AZURE_USERNAME }}/app/frontend
           npm install
           npm run build
