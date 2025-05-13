@@ -30,6 +30,8 @@ services:
   frontend:
     build: ./frontend
     container_name: frontend-app
+    env_file:
+      - .env
     networks:
       - app-network
 
