@@ -1,0 +1,55 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AZURE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.AZURE_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy files to Azure VM
+        run: |
+          rsync -avz --delete \
+            --exclude="node_modules/" \
+            --exclude="*.env*" \
+            --exclude="__pycache__/" \
+            --exclude="*.log" \
+            --exclude=".git/" \
+            --exclude=".github/" \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            ./ ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_HOST }}:/home/${{ secrets.AZURE_USERNAME }}/app
+
+      - name: Create .env on Azure VM
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_HOST }} << EOF
+          cat <<EOT > /home/${{ secrets.AZURE_USERNAME }}/app/.env
+          GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL=${{ secrets.GROQ_MODEL }}
+          EE_SERVICE_ACCOUNT=${{ secrets.EE_SERVICE_ACCOUNT }}
+          EE_PRIVATE_KEY_JSON=${{ secrets.EE_PRIVATE_KEY_JSON }}
+          POLARIZATION=${{ secrets.POLARIZATION }}
+          PASS_DIRECTION=${{ secrets.PASS_DIRECTION }}
+          THRESHOLD=${{ secrets.THRESHOLD }}
+          EOT
+          EOF
+
+      - name: Restart app with Docker Compose
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_HOST }} << 'EOF'
+          cd /home/${{ secrets.AZURE_USERNAME }}/app
+          docker compose down || true
+          docker compose up -d --build
+          EOF
