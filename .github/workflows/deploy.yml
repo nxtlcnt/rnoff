@@ -1,3 +1,4 @@
+#test
 name: Deploy to Azure VM
 
 on:
