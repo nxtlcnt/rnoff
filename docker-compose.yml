@@ -2,16 +2,16 @@ services:
   model_service:
     build: ./model
     container_name: model-service
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
     networks:
       - app-network
 
   chatbot_service:
     build: ./bot
     container_name: chatbot-service
-    expose:
-      - "8001"
+    ports:
+      - "8001:8001"
     env_file:
       - .env
     networks:
@@ -20,18 +20,21 @@ services:
   gee_service:
     build: ./api
     container_name: gee-service
-    expose:
-      - "8002"
+    ports:
+      - "8002:8002"
     env_file:
       - .env
     networks:
       - app-network
 
+  # frontend build hanya untuk menghasilkan dist
   frontend:
-    build: ./frontend
-    container_name: frontend-app
-    env_file:
-      - .env
+    build:
+      context: ./frontend
+      target: builder
+    command: echo "✅ Frontend built!"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
     networks:
       - app-network
 
@@ -47,7 +50,6 @@ services:
       - model_service
       - chatbot_service
       - gee_service
-      - frontend
     env_file:
       - .env
     networks:
