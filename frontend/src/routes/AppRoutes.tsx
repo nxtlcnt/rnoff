@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Home, NotFound, Maps } from "../views/pages";
+import { Home, NotFound, Maps, ChatBot } from "../views/pages";
 
 const AppRoutes = () => {
   return (
@@ -8,6 +8,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/maps" element={<Maps />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/chatbot" element={<ChatBot />} />
       </Routes>
     </Router>
   );

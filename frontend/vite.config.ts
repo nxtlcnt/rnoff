@@ -7,9 +7,14 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/gee": {
-        target: "http://localhost:8002", // ← sesuaikan port Flask-mu
+        target: "http://localhost:8002",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/gee/, "/api/gee"),
+      },
+      "/api/chat": {
+        target: "http://localhost:8001",
+        changeOrigin: true,
+        rewrite: (path) => path,
       },
     },
   },

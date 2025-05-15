@@ -57,11 +57,11 @@ def query_groq(convo: Conversation) -> str:
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/chat/")
+@app.post("/api/chat/")
 async def chat(input: UserInput):
     convo = get_or_create_conversation(input.conversation_id)
     docs = vectorstore.similarity_search(input.message, k=3)
-    context = "\n\n".join([doc.page_content for doc in docs])
+    context = "\n\n".join([doc.content for doc in docs])
     convo.messages.append({
         "role": "user",
         "content": f"[CONTEXT]:\n{context}\n\n[QUESTION]: {input.message}"
